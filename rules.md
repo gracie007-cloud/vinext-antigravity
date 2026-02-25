@@ -25,6 +25,7 @@
 10. [Environment & Secrets](#10-environment--secrets)
 11. [Testing](#11-testing)
 12. [Animations](#12-animations)
+13. [Forms](#13-forms)
 
 ---
 
@@ -465,6 +466,210 @@ chore/upgrade-react-19
 
 ---
 
+## 13. Forms
+
+> **All forms MUST use react-hook-form with zod resolvers and shadcn/ui Form components.**
+> This ensures consistent validation, type safety, and accessible form UI.
+
+### Required Stack
+
+| Library | Purpose |
+|---------|---------|
+| `react-hook-form` | Form state management, validation, submission |
+| `@hookform/resolvers` | Zod schema integration |
+| `zod` | Schema-based validation with TypeScript inference |
+| `shadcn/ui Form` | Accessible form components built on Radix UI |
+
+### Installation
+
+```bash
+pnpm add react-hook-form @hookform/resolvers zod
+pnpm dlx shadcn-ui@latest add form
+```
+
+### Form Pattern
+
+```tsx
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+
+// 1. Define Zod schema
+const loginFormSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+});
+
+// 2. Infer TypeScript type from schema
+type LoginFormValues = z.infer<typeof loginFormSchema>;
+
+export function LoginForm() {
+  // 3. Initialize form with zodResolver
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  // 4. Handle submission
+  function onSubmit(values: LoginFormValues) {
+    // values is fully typed
+    console.log(values);
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="you@example.com" {...field} />
+              </FormControl>
+              <FormDescription>
+                Enter your registered email address.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Sign In</Button>
+      </form>
+    </Form>
+  );
+}
+```
+
+### Form Rules
+
+```
+✅ DO: Define Zod schema BEFORE the component
+✅ DO: Use z.infer to derive types from schemas
+✅ DO: Use zodResolver to connect schema to useForm
+✅ DO: Use shadcn Form components (Form, FormField, FormItem, etc.)
+✅ DO: Spread {...field} from render prop onto input components
+✅ DO: Use FormMessage for validation errors — never custom error UI
+✅ DO: Set defaultValues for all fields to avoid uncontrolled warnings
+✅ DO: Extract schemas to a separate file for complex forms (schemas/ folder)
+
+❌ DON'T: Use controlled inputs without react-hook-form
+❌ DON'T: Manage form state with useState
+❌ DON'T: Write custom validation logic — use Zod schemas
+❌ DON'T: Skip FormMessage — users need validation feedback
+❌ DON'T: Hardcode error messages in components — define in schema
+❌ DON'T: Use native form validation (noValidate on form is fine)
+```
+
+### Schema Location
+
+| Form Complexity | Location |
+|-----------------|----------|
+| Simple (1-2 fields) | Same file as component |
+| Medium (3-6 fields) | Separate `schemas/` folder in feature |
+| Complex / Shared | `src/features/<feature>/schemas/` or `src/lib/schemas/` |
+
+### Common Zod Patterns
+
+```ts
+// Required string
+name: z.string().min(1, 'Name is required');
+
+// Email validation
+email: z.string().email('Invalid email address');
+
+// Password with requirements
+password: z
+  .string()
+  .min(8, 'Must be at least 8 characters')
+  .regex(/[A-Z]/, 'Must contain uppercase letter')
+  .regex(/[0-9]/, 'Must contain number');
+
+// Optional field
+bio: z.string().optional();
+
+// Number from string input
+age: z.coerce.number().min(18, 'Must be 18 or older');
+
+// Date
+birthDate: z.date({ required_error: 'Birth date is required' });
+
+// Enum
+role: z.enum(['admin', 'user', 'guest'], {
+  required_error: 'Please select a role',
+});
+
+// Conditional validation
+password: z.string().min(8),
+confirmPassword: z.string(),
+.refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ['confirmPassword'],
+});
+
+// Array
+tags: z.array(z.string()).min(1, 'Select at least one tag');
+```
+
+### Form Components to Add
+
+```bash
+# Core form component
+pnpm dlx shadcn-ui@latest add form
+
+# Common form inputs
+pnpm dlx shadcn-ui@latest add input
+pnpm dlx shadcn-ui@latest add select
+pnpm dlx shadcn-ui@latest add checkbox
+pnpm dlx shadcn-ui@latest add radio-group
+pnpm dlx shadcn-ui@latest add textarea
+pnpm dlx shadcn-ui@latest add switch
+pnpm dlx shadcn-ui@latest add calendar popover  # For date pickers
+```
+
+### Accessibility Notes
+
+- shadcn Form components use Radix UI primitives
+- Labels are properly associated with inputs
+- Error messages are announced to screen readers
+- Required fields are indicated (add `*` to label text)
+- Focus management is handled automatically
+
+> For form UI patterns, validation UX, and styling, see
+> [`design-system.md`](./design-system.md) § 6 Component Architecture.
+
+---
+
 ## Quick Reference
 
 ```
@@ -481,6 +686,7 @@ PAGES        → Thin orchestrators — no business logic
 IMPORTS      → @/ alias, 4-group order, no circular deps, barrel-only cross-feature
 STYLING      → Tailwind utilities only, CSS vars, 8pt grid, 60/30/10 color
 COMPONENTS   → shadcn/ui first, CVA variants, Radix for behavior
+FORMS        → react-hook-form + zodResolver + shadcn Form components
 COMMITS      → type(scope): description
 FILE HEADER  → Every new file, ISO date, specific description
 DESIGN       → See design-system.md for full UI rules

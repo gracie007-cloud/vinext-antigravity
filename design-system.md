@@ -14,6 +14,7 @@
 4. [Color — 60/30/10 Rule](#4-color--603010-rule)
 5. [Tailwind v4 Setup](#5-tailwind-v4-setup)
 6. [Component Architecture](#6-component-architecture)
+   - [Form Components](#form-components)
 7. [Dark Mode](#7-dark-mode)
 8. [Motion & Animation](#8-motion--animation)
 9. [Accessibility](#9-accessibility)
@@ -329,6 +330,80 @@ const buttonVariants = cva(
 }
 ```
 
+### Form Components
+
+Forms use shadcn/ui Form components built on react-hook-form and Radix UI. See [`rules.md`](./rules.md) § 13 for implementation patterns.
+
+**Required shadcn components for forms:**
+
+```bash
+# Add form and input components
+pnpm dlx shadcn-ui@latest add form input select checkbox radio-group textarea switch
+```
+
+**Form Component Structure:**
+
+```tsx
+<Form {...form}>
+  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+    <FormField
+      control={form.control}
+      name="fieldName"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Label Text</FormLabel>
+          <FormControl>
+            <Input {...field} />
+          </FormControl>
+          <FormDescription>Helper text for the field.</FormDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  </form>
+</Form>
+```
+
+**Form Spacing Guidelines:**
+
+| Element | Spacing |
+|---------|---------|
+| Between form fields | `space-y-6` (24px) |
+| Label to input | `space-y-2` (8px) |
+| Description to error | `space-y-1` (4px) |
+| Form buttons | `pt-4` (16px top padding) |
+
+**Form Input Sizing (follows 8pt grid):**
+
+| Input Size | Height | Classes |
+|------------|--------|---------|
+| Default | 40px | `h-10` |
+| Small | 32px | `h-8` |
+| Large | 48px | `h-12` |
+
+**Form Validation States:**
+
+```tsx
+// Error styling is handled automatically by FormMessage
+// Custom error styling via FormItem:
+<FormItem className="has-focus-visible:ring-2 has-focus-visible:ring-ring">
+```
+
+**Form Rules:**
+
+```
+✅ DO: Use space-y-6 between form fields
+✅ DO: Use space-y-2 between label and input
+✅ DO: Use FormMessage for all validation errors
+✅ DO: Include FormDescription for complex fields
+✅ DO: Use h-10 (40px) for default input height
+
+❌ DON'T: Use arbitrary spacing in forms
+❌ DON'T: Skip FormLabel — accessibility requires labels
+❌ DON'T: Use placeholder text as labels
+❌ DON'T: Create custom error message components
+```
+
 ---
 
 ## 7. Dark Mode
@@ -424,6 +499,15 @@ const buttonVariants = cva(
 - [ ] data-slot attributes preserved
 - [ ] Components in `src/components/ui/`
 
+### Forms
+- [ ] Uses react-hook-form with zodResolver
+- [ ] Uses shadcn Form components (Form, FormField, FormItem, etc.)
+- [ ] Zod schema defined for validation
+- [ ] Types inferred from Zod schema with z.infer
+- [ ] FormMessage used for validation errors
+- [ ] FormLabel on every field
+- [ ] Spacing follows 8pt grid (space-y-6 between fields)
+
 ### Tailwind v4
 - [ ] Uses `@import "tailwindcss"` (not v3 directives)
 - [ ] Theme tokens in `@theme` directive
@@ -448,6 +532,7 @@ SPACING      → 8pt grid: every value divisible by 8 or 4
 COLORS       → 60% neutral / 30% complementary / 10% accent
 VARIABLES    → OKLCH format, defined in :root, registered in @theme
 COMPONENTS   → shadcn/ui first, CVA for variants, Radix for behavior
+FORMS        → react-hook-form + zod + shadcn Form, 8pt spacing between fields
 CLASS ORDER  → layout → sizing → spacing → type → color → border → effects → states
 DARK MODE    → CSS variables + .dark class + @custom-variant
 ANIMATION    → Purpose-driven, <300ms, consistent easing

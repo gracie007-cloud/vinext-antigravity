@@ -29,6 +29,7 @@
 - Documentation & comments → `rules.md § 6`
 - Imports → `rules.md § 7`
 - Git & commits → `rules.md § 9`
+- Forms (react-hook-form + zod) → `rules.md § 13`
 
 ---
 
@@ -45,6 +46,7 @@
 - Color (60/30/10) → `design-system.md § 4`
 - Tailwind v4 setup → `design-system.md § 5`
 - Component architecture → `design-system.md § 6`
+- Form components → `design-system.md § 6 (Form Components)`
 - UI review checklist → `design-system.md § 10`
 
 ---
