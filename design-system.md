@@ -257,9 +257,9 @@ Apply classes in this order within an element:
 
 ```bash
 # CLI (recommended)
-npx shadcn-ui@latest add button
-npx shadcn-ui@latest add card
-npx shadcn-ui@latest add dialog
+pnpm dlx shadcn-ui@latest add button
+pnpm dlx shadcn-ui@latest add card
+pnpm dlx shadcn-ui@latest add dialog
 
 # Components install to: src/components/ui/
 ```
