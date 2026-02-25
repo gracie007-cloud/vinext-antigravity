@@ -70,6 +70,45 @@
 
 ---
 
+## UI Components & MCP Tools
+
+### shadcn/ui Components
+
+- **Always prefer shadcn/ui components** for building UI.
+- Use the **shadcn MCP tools** to discover available components:
+  - `get_project_registries` — Get configured registry names from `components.json`
+  - `list_items_in_registries` — List all available components
+  - `search_items_in_registries` — Search for specific components (fuzzy matching)
+  - `view_items_in_registries` — View component details and source code
+  - `get_item_examples_from_registries` — Find usage examples and demos
+  - `get_add_command_for_items` — Get the CLI command to add components
+
+### Documentation & Code Examples
+
+- **Use the `ref_search_documentation` and `ref_read_url` MCP tools** for searching and reading documentation from the web.
+- **Use the `web_search_exa`, `get_code_context_exa`, and `company_research_exa` MCP tools** for documentation, code examples, and research from the internet.
+
+### Next.js Documentation (Local)
+
+- **Next.js docs are available locally in `.next-docs/`** — ALWAYS use these first.
+- **DO NOT search online for Next.js documentation.** The local docs in `.next-docs/` are the authoritative source for this project.
+- The docs index is embedded in this file (see `<!-- NEXT-AGENTS-MD-START -->` section below).
+
+---
+
+## Development Workflow
+
+### Dev Server
+
+- **DO NOT run the dev server** (`pnpm dev`). The developer runs it themselves.
+- **ALWAYS assume the dev server is running** at `http://localhost:3000`.
+
+### Frontend Testing
+
+- **DO NOT initialize or run `frontend-tester`** agent. The developer handles frontend testing manually.
+
+---
+
 ## Root Setup Commands
 
 ```bash
@@ -84,6 +123,9 @@ pnpm build
 
 # Lint
 pnpm lint
+
+# lint command for fixing lint errors
+pnpm lint --fix
 
 # Type check (add to package.json if needed)
 npx tsc --noEmit
