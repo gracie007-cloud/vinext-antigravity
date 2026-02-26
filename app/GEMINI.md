@@ -1,4 +1,4 @@
-# app/agents.md — Next.js App Router
+# app/GEMINI.md — Next.js App Router
 
 > **Package Identity**: Next.js 16 frontend application using App Router.
 > Contains pages, layouts, API routes, and global styles.

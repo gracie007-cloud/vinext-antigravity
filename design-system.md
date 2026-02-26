@@ -1,7 +1,7 @@
 # Design System — shadcn/ui + Tailwind v4
 
 > **Single source of truth for all UI/design conventions.**
-> Every `agents.md` file references this. Never duplicate these rules elsewhere.
+> Every `GEMINI.md` file references this. Never duplicate these rules elsewhere.
 > For code conventions (naming, structure, git), see [`rules.md`](./rules.md).
 
 ---

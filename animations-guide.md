@@ -3,7 +3,7 @@
 > This is the full animation rule set for human contributors and AI coding agents
 > working directly on animation files.
 >
-> **If you are generating `agents.md` files**, read [`animations.md`](./animations.md)
+> **If you are generating `GEMINI.md` files**, read [`animations.md`](./animations.md)
 > instead — it contains the section map and classification rules without the full detail.
 >
 > This project uses **GSAP** (`gsap` + `@gsap/react`) as the exclusive animation

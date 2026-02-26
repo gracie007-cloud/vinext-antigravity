@@ -2,7 +2,7 @@
 
 > **Single source of truth for all code conventions.**
 > Every contributor — human or AI — must read this before creating or modifying
-> any file. All `agents.md` files reference this. Never duplicate these rules elsewhere.
+> any file. All `GEMINI.md` files reference this. Never duplicate these rules elsewhere.
 >
 > For UI/design conventions (typography, spacing, colors, components), see
 > [`design-system.md`](./design-system.md).

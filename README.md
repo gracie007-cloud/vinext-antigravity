@@ -82,7 +82,7 @@ pnpm lint --fix
 │   ├── layout.tsx          # Root layout
 │   ├── page.tsx            # Home page
 │   ├── globals.css         # Global styles + Tailwind v4 theme
-│   └── agents.md           # App-specific AI agent guidance
+│   └── GEMINI.md           # App-specific AI agent guidance
 │
 ├── components/             # Shared UI components
 │   └── ui/                 # shadcn/ui components
@@ -108,7 +108,7 @@ pnpm lint --fix
 ├── rules.md                # Code conventions (MUST READ)
 ├── design-system.md        # UI/design rules (MUST READ)
 ├── animations-guide.md     # GSAP animation rules (MUST READ)
-└── AGENTS.md               # AI agent guidance
+└── GEMINI.md               # AI agent guidance
 ```
 
 ## Documentation
