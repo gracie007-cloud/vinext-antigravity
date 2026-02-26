@@ -1,12 +1,12 @@
-# Next.js Frontend Template
+# vinext
 
-A production-ready Next.js 16 frontend template with a comprehensive design system, animation infrastructure, and strict code conventions. Built for scalability, maintainability, and developer productivity.
+A production-ready frontend template powered by **vinext** — a Vite-based reimplementation of Next.js routing that runs on Cloudflare Workers. Built for scalability, edge performance, and developer productivity.
 
 ## Tech Stack
 
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| [Next.js](https://nextjs.org/) | 16.x | React framework with App Router |
+| [Vite](https://vitejs.dev/) | Latest | Lightning-fast build tool |
 | [React](https://react.dev/) | 19.x | UI library |
 | [TypeScript](https://www.typescriptlang.org/) | 5.x | Type safety |
 | [Tailwind CSS](https://tailwindcss.com/) | v4 | Utility-first styling |
@@ -14,11 +14,13 @@ A production-ready Next.js 16 frontend template with a comprehensive design syst
 | [GSAP](https://greensock.com/gsap/) | 3.x | Professional animations |
 | [React Hook Form](https://react-hook-form.com/) | 7.x | Form state management |
 | [Zod](https://zod.dev/) | 4.x | Schema validation |
+| [Cloudflare Workers](https://workers.cloudflare.com/) | Latest | Edge runtime deployment |
 | [pnpm](https://pnpm.io/) | Latest | Fast, disk-efficient package manager |
 
 ## Features
 
-- **Modern Architecture**: Hybrid folder structure combining feature-based and type-based organization
+- **Edge-First Architecture**: Runs on Cloudflare Workers for ultra-low latency globally
+- **File-Based Routing**: Familiar page-based routing powered by Vite — no framework lock-in
 - **Design System**: Enforced typography (4 sizes, 2 weights), 8pt grid spacing, and 60/30/10 color rule
 - **Animation Infrastructure**: GSAP with `useGSAP` hook pattern, responsive animations via `matchMedia()`, and motion tokens
 - **Component Library**: Pre-configured shadcn/ui with Radix UI primitives for accessibility
@@ -37,8 +39,8 @@ A production-ready Next.js 16 frontend template with a comprehensive design syst
 
 ```bash
 # Clone the repository
-git clone https://github.com/itsyasirkhandev/nextjs_frontend_template.git
-cd nextjs_frontend_template
+git clone https://github.com/itsyasirkhandev/vinext.git
+cd vinext
 
 # Install dependencies
 pnpm install
@@ -59,8 +61,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 # Production build
 pnpm build
 
-# Start production server
-pnpm start
+# Preview production build locally
+pnpm preview
 ```
 
 ### Linting
@@ -76,7 +78,7 @@ pnpm lint --fix
 ## Project Structure
 
 ```
-├── app/                    # Next.js App Router
+├── app/                    # App Router (file-based routing)
 │   ├── layout.tsx          # Root layout
 │   ├── page.tsx            # Home page
 │   ├── globals.css         # Global styles + Tailwind v4 theme
@@ -205,22 +207,25 @@ refactor(products): extract validation to shared schema
 |---------|-------------|
 | `pnpm dev` | Start development server |
 | `pnpm build` | Production build |
-| `pnpm start` | Start production server |
+| `pnpm preview` | Preview production build locally |
 | `pnpm lint` | Run ESLint |
 | `pnpm lint --fix` | Fix lint errors |
 
 ## Deployment
 
-The easiest way to deploy is using the [Vercel Platform](https://vercel.com/new):
+Deploy to the edge instantly with **Cloudflare Workers**:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)
+```bash
+# Deploy to Cloudflare Workers
+pnpm deploy
+```
 
-See the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more options.
+Or use the [Cloudflare Dashboard](https://dash.cloudflare.com/) to connect your GitHub repo for automatic deployments on every push.
 
 ## Learn More
 
-- [Next.js Documentation](https://nextjs.org/docs) — features and API
-- [Learn Next.js](https://nextjs.org/learn) — interactive tutorial
+- [Vite Documentation](https://vitejs.dev/guide/) — build tool and dev server
+- [Cloudflare Workers Docs](https://developers.cloudflare.com/workers/) — edge runtime
 - [shadcn/ui Documentation](https://ui.shadcn.com/docs) — component library
 - [GSAP Documentation](https://greensock.com/docs/) — animation library
 
@@ -230,4 +235,4 @@ MIT License — feel free to use for personal and commercial projects.
 
 ---
 
-*Last updated: 2026-02-25*
+*Last updated: 2026-02-26*
