@@ -761,6 +761,74 @@ function LoginForm() {
 }
 ```
 
+### Error Handling
+
+> **All API errors flow through `lib/apiErrorHandler.ts`.**
+> Services **throw** → components **catch** → `handleApiError()` **toasts**.
+
+#### Error Infrastructure
+
+| File | Purpose |
+|------|---------|
+| `types/api.types.ts` — `ApiError` | Error class extending `Error` (typed `statusCode`, `errors`) |
+| `types/api.types.ts` — `isApiError()` | Type-guard for safe narrowing in catch blocks |
+| `lib/apiErrorHandler.ts` — `handleApiError()` | Shows toast + returns typed `ApiError` for further handling |
+| `lib/apiErrorHandler.ts` — `getApiErrorMessage()` | Resolves error → user-friendly string (no toast) |
+| `lib/apiErrorHandler.ts` — `getValidationErrors()` | Flattens server field errors for form mapping |
+
+#### Service Pattern — Throw
+
+Services are thin and do **not** catch errors. Let `apiClient` throw `ApiError`:
+
+```ts
+// features/auth/services/authService.ts
+export async function login(data: LoginRequest): Promise<ApiResponse<AuthResponse>> {
+    return apiClient.post<AuthResponse>(API_ENDPOINTS.AUTH.LOGIN, data);
+}
+// ApiError is thrown automatically by apiClient on non-2xx responses
+```
+
+#### Component Pattern — Catch & Toast
+
+```tsx
+'use client';
+
+import { login } from '@/features/auth';
+import { handleApiError } from '@/lib/apiErrorHandler';
+import { toast } from 'sonner';
+
+function LoginForm() {
+    async function onSubmit(values: LoginFormValues) {
+        try {
+            const response = await login(values);
+            toast.success('Logged in successfully!');
+            // response.data.user, response.data.tokens
+        } catch (error) {
+            handleApiError(error, 'Login failed. Please try again.');
+        }
+    }
+}
+```
+
+#### Form Validation Errors
+
+```tsx
+import { handleApiError, getValidationErrors } from '@/lib/apiErrorHandler';
+import { isApiError } from '@/types/api.types';
+
+async function onSubmit(values: FormValues) {
+    try {
+        await createUser(values);
+    } catch (error) {
+        const apiError = handleApiError(error);
+        if (apiError?.errors) {
+            const fieldErrors = getValidationErrors(apiError);
+            // Map to react-hook-form: form.setError('email', { message: fieldErrors.email })
+        }
+    }
+}
+```
+
 ### API Architecture Rules
 
 ```
@@ -770,6 +838,8 @@ function LoginForm() {
 ✅ DO: Keep services as thin functions — one function per API call
 ✅ DO: Export services through the feature barrel (index.ts)
 ✅ DO: Define feature-specific types in features/<name>/types/
+✅ DO: Use handleApiError() in component catch blocks — never raw toast.error()
+✅ DO: Use isApiError() type-guard for safe narrowing — never `as ApiError`
 
 ❌ DON'T: Hardcode API URLs in services or components
 ❌ DON'T: Call apiClient directly from components — go through a service
@@ -777,6 +847,8 @@ function LoginForm() {
 ❌ DON'T: Put business logic in services — services only do HTTP calls
 ❌ DON'T: Use axios or other HTTP libraries — apiClient wraps native fetch
 ❌ DON'T: Skip error typing — always catch ApiError
+❌ DON'T: Catch errors in services — let them propagate to components
+❌ DON'T: Show toast.error() directly — use handleApiError() instead
 ```
 
 ---

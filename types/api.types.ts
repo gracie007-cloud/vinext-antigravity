@@ -26,12 +26,33 @@ export interface ApiResponse<T> {
 
 /**
  * Normalized error thrown by `apiClient` on non-2xx responses.
- * Catch this in services or components for typed error handling.
+ * Extends native Error for proper stack traces and `instanceof` checks.
  */
-export interface ApiError {
-    message: string;
-    statusCode: number;
-    errors?: Record<string, string[]>;
+export class ApiError extends Error {
+    public readonly statusCode: number;
+    public readonly errors?: Record<string, string[]>;
+
+    constructor(
+        message: string,
+        statusCode: number,
+        errors?: Record<string, string[]>,
+    ) {
+        super(message);
+        this.name = 'ApiError';
+        this.statusCode = statusCode;
+        this.errors = errors;
+    }
+}
+
+/*
+ * Function Name: isApiError
+ * Description:   Type-guard that narrows `unknown` to `ApiError`.
+ *                Use in catch blocks for safe, typed error handling.
+ * Parameters:    error (unknown) — The caught error value.
+ * Returns:       boolean — True if `error` is an instance of ApiError.
+ */
+export function isApiError(error: unknown): error is ApiError {
+    return error instanceof ApiError;
 }
 
 // ---------------------------------------------------------------------------

@@ -8,7 +8,8 @@
  * Created Date:  2026-02-26
  */
 
-import type { ApiError, ApiResponse, RequestConfig } from '@/types/api.types';
+import { ApiError } from '@/types/api.types';
+import type { ApiResponse, RequestConfig } from '@/types/api.types';
 
 // ---------------------------------------------------------------------------
 // Auth Token Getter
@@ -92,12 +93,11 @@ async function handleResponse<T>(response: Response): Promise<T> {
     const body = await response.json();
 
     if (!response.ok) {
-        const error: ApiError = {
-            message: body.message ?? response.statusText,
-            statusCode: response.status,
-            errors: body.errors,
-        };
-        throw error;
+        throw new ApiError(
+            body.message ?? response.statusText,
+            response.status,
+            body.errors,
+        );
     }
 
     return body as T;
