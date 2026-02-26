@@ -1,7 +1,7 @@
 # GEMINI.md — AI Agent Guidance
 
 > **For AI coding agents working in this codebase.**
-> Read this file first, then read the sub-folder `GEMINI.md` closest to the file you're editing.
+> Read this file first, then read the sub-folder `gemini.md` closest to the file you're editing.
 
 ---
 
@@ -10,7 +10,7 @@
 - **Type**: Single Next.js 16 frontend application (not a monorepo)
 - **Tech**: Next.js 16 App Router, React 19, TypeScript 5, Tailwind v4, shadcn/ui, GSAP
 - **Package Manager**: pnpm
-- **Structure**: Single app — feature modules live in `src/features/`. The App Router (`app/`) has its own [`GEMINI.md`](app/GEMINI.md) for routing and page-level guidance.
+- **Structure**: Single app — feature modules live in `src/features/`. The App Router (`app/`) has its own [`gemini.md`](app/gemini.md) for routing and page-level guidance.
 - **Conventions**: `rules.md` (code), `design-system.md` (UI), `animations-guide.md` (GSAP)
 
 ---
@@ -153,7 +153,7 @@ npx tsc --noEmit
 
 | Area | Path | Agent Guidance | UI? | Anim? |
 |------|------|----------------|-----|-------|
-| App Router | `app/` | [`app/GEMINI.md`](app/GEMINI.md) | Yes | Yes |
+| App Router | `app/` | [`app/gemini.md`](app/gemini.md) | Yes | Yes |
 
 **Quick-find commands:**
 
