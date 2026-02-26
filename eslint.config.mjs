@@ -1,14 +1,20 @@
-import { defineConfig, globalIgnores } from "eslint/config";
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
 
-const eslintConfig = defineConfig([
-  globalIgnores([
-    ".next/**",
-    "out/**",
-    "build/**",
-    "dist/**",
-    ".vinext/**",
-    "node_modules/**",
-  ]),
+export default tseslint.config(
+  {
+    ignores: [
+      ".next/**",
+      "out/**",
+      "build/**",
+      "dist/**",
+      ".vinext/**",
+      "node_modules/**",
+      "components/ui/**" // Usually we ignore shadcn UI components from linting to avoid unnecessary strictness
+    ]
+  },
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
   {
     files: ["**/*.{ts,tsx,js,jsx,mjs,cjs}"],
     languageOptions: {
@@ -36,17 +42,12 @@ const eslintConfig = defineConfig([
         require: "readonly",
         exports: "readonly",
         Buffer: "readonly",
-        // React globals (JSX transform)
+        // React globals
         React: "readonly",
-      },
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
       },
     },
     rules: {
-      "no-unused-vars": [
+      "@typescript-eslint/no-unused-vars": [
         "warn",
         {
           argsIgnorePattern: "^_",
@@ -54,10 +55,11 @@ const eslintConfig = defineConfig([
           caughtErrorsIgnorePattern: "^_",
         },
       ],
+      "no-unused-vars": "off",
       "no-console": "warn",
-      "no-undef": "off", // TypeScript handles undefined variable checks
+      "no-undef": "off",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/ban-ts-comment": "warn"
     },
-  },
-]);
-
-export default eslintConfig;
+  }
+);
