@@ -70,13 +70,24 @@ app/
 ├── page.tsx              # Home page (template overview)
 ├── error.tsx             # Global error boundary (Client Component)
 ├── not-found.tsx         # Custom 404 page
+├── loading.tsx           # Root loading fallback (spinner)
 ├── providers.tsx         # Client providers wrapper
 ├── (auth)/               # Route group — auth pages
+│   ├── layout.tsx        # Centered card wrapper
+│   ├── loading.tsx       # Auth skeleton
 │   ├── login/page.tsx
 │   └── register/page.tsx
-├── dashboard/            # Dashboard section
-│   ├── layout.tsx
-│   └── page.tsx
+├── (dashboard)/          # Route group — authenticated area
+│   ├── layout.tsx        # AppShell sidebar + header
+│   ├── loading.tsx       # Dashboard skeleton
+│   └── dashboard/
+│       ├── page.tsx
+│       └── settings/page.tsx
+├── (marketing)/          # Route group — public pages
+│   ├── layout.tsx        # MarketingShell header + footer
+│   ├── loading.tsx       # Marketing skeleton
+│   ├── about/page.tsx
+│   └── pricing/page.tsx
 └── api/                  # API route handlers
     └── users/route.ts
 ```
@@ -141,7 +152,11 @@ app/
 | Home page | `app/page.tsx` |
 | Error boundary | `app/error.tsx` |
 | 404 page | `app/not-found.tsx` |
+| Root loading | `app/loading.tsx` |
 | Client providers | `app/providers.tsx` |
+| Route constants | `constants/routes.ts` |
+| AppShell layout | `components/layout/AppShell.tsx` |
+| MarketingShell layout | `components/layout/MarketingShell.tsx` |
 | GSAP config | `lib/gsapConfig.ts` |
 | Animation tokens | `constants/animationTokens.ts` |
 | shadcn config | `components.json` |

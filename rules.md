@@ -27,6 +27,7 @@
 12. [Animations](#12-animations)
 13. [Forms](#13-forms)
 14. [API Architecture](#14-api-architecture)
+15. [Routing](#15-routing)
 
 ---
 
@@ -853,6 +854,90 @@ async function onSubmit(values: FormValues) {
 
 ---
 
+## 15. Routing
+
+> **All client-side route paths live in `constants/routes.ts`.**
+> This ensures consistent navigation, avoids typos, and makes refactoring safe.
+
+### Route Constants (`constants/routes.ts`)
+
+- **Every route path** lives here — never hardcode URL strings in components.
+- Static paths → string constants. Dynamic paths → functions returning strings.
+- Group by domain: `AUTH`, `DASHBOARD`, `MARKETING`, etc.
+
+```ts
+// ✅ Good — import from routes
+import { ROUTES } from '@/constants/routes';
+<Link href={ROUTES.DASHBOARD.ROOT}>Dashboard</Link>
+
+// ❌ Bad — hardcoded URL
+<Link href="/dashboard">Dashboard</Link>
+```
+
+### Feature-Based Route Groups
+
+Use parenthesized route groups `(groupName)/` to organize routes by domain.
+Each group has its own layout, loading skeleton, and error boundary:
+
+| Group | Purpose | Shell Component | Layout Path |
+|-------|---------|-----------------|-------------|
+| `(auth)` | Login, register, forgot password | Minimal centered | `app/(auth)/layout.tsx` |
+| `(dashboard)` | Authenticated admin area | `AppShell` | `app/(dashboard)/layout.tsx` |
+| `(marketing)` | Public-facing pages | `MarketingShell` | `app/(marketing)/layout.tsx` |
+
+> Route groups use parentheses `()` so they **don't** affect the URL path.
+> `app/(auth)/login/page.tsx` → URL: `/login` (not `/auth/login`).
+
+### Lazy Loading (`loading.tsx`)
+
+Each route group has a `loading.tsx` that acts as a Suspense fallback.
+This is the App Router's **native** lazy loading mechanism.
+
+```
+app/
+├── loading.tsx                    # Root fallback (spinner)
+├── (auth)/
+│   ├── layout.tsx                 # Centered card wrapper
+│   ├── loading.tsx                # Auth skeleton
+│   └── login/page.tsx
+├── (dashboard)/
+│   ├── layout.tsx                 # AppShell sidebar + header
+│   ├── loading.tsx                # Dashboard skeleton
+│   └── dashboard/page.tsx
+└── (marketing)/
+    ├── layout.tsx                 # MarketingShell header + footer
+    ├── loading.tsx                # Marketing skeleton
+    └── about/page.tsx
+```
+
+### Shell Components
+
+Reusable layout wrappers used by route group layouts:
+
+| Component | Path | Used By |
+|-----------|------|---------|
+| `AppShell` | `components/layout/AppShell.tsx` | `(dashboard)` layout |
+| `MarketingShell` | `components/layout/MarketingShell.tsx` | `(marketing)` layout |
+
+### Routing Rules
+
+```
+✅ DO: Import all route paths from constants/routes.ts
+✅ DO: Use route groups (parenthesized) for domain-based grouping
+✅ DO: Create loading.tsx in every route group for lazy loading
+✅ DO: Keep pages thin — delegate to feature components
+✅ DO: Use shell components for shared layout (sidebar, header, footer)
+✅ DO: Create error.tsx per route group for granular error handling
+
+❌ DON'T: Hardcode route strings in components — use ROUTES constants
+❌ DON'T: Put business logic in layout or loading files
+❌ DON'T: Use React.lazy() or next/dynamic for route-level lazy loading
+❌ DON'T: Nest route groups deeper than 1 level
+❌ DON'T: Skip loading.tsx — every group should have a skeleton
+```
+
+---
+
 ## Quick Reference
 
 ```
@@ -871,6 +956,7 @@ STYLING      → Tailwind utilities only, CSS vars, 8pt grid, 60/30/10 color
 COMPONENTS   → shadcn/ui first, CVA variants, Radix for behavior
 FORMS        → react-hook-form + zodResolver + shadcn Form components
 API          → apiClient only, endpoints.ts for paths, services per feature, barrel exports
+ROUTING      → constants/routes.ts for paths, route groups for domains, loading.tsx for lazy loading
 COMMITS      → type(scope): description
 FILE HEADER  → Every new file, ISO date, specific description
 DESIGN       → See design-system.md for full UI rules
