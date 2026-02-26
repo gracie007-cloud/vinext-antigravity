@@ -145,6 +145,9 @@
 # Install dependencies
 pnpm install
 
+# Check vinext compatibility
+npx vinext check
+
 # Development server
 pnpm dev
 

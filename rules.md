@@ -786,11 +786,14 @@ try {
 - Group by domain: `AUTH`, `DASHBOARD`, `MARKETING`, etc.
 
 ```ts
-// ✅ Good — import from routes
+// ✅ Good — import from routes and use vinext shim
 import { ROUTES } from '@/constants/routes';
+import Link from 'vinext/shims/link';
+
 <Link href={ROUTES.DASHBOARD.ROOT}>Dashboard</Link>
 
-// ❌ Bad — hardcoded URL
+// ❌ Bad — hardcoded URL or next/link
+import Link from 'next/link';
 <Link href="/dashboard">Dashboard</Link>
 ```
 
@@ -830,6 +833,18 @@ app/
     └── about/page.tsx
 ```
 
+### Error Boundaries & Access Control
+
+Next.js (and vinext) handles errors and access control seamlessly via file conventions:
+
+- `error.tsx`: Catches runtime errors and lazy loading failures (e.g., dynamically imported chunks failing to load). Must include `"use client"`.
+- `global-error.tsx`: Catches errors specifically in the root `layout.tsx`.
+- `not-found.tsx`: Renders 404 UI. Triggered automatically for unmatched routes, or programmatically via `notFound()` from `next/navigation`.
+- `forbidden.tsx`: Renders 403 UI. Triggered programmatically via `forbidden()` from `next/navigation`. 
+- `unauthorized.tsx`: Renders 401 UI. Triggered programmatically via `unauthorized()` from `next/navigation`.
+
+Place these files at the root for global fallbacks, and within `(groupName)/` folders for granular error states (e.g., keeping the `AppShell` visible when a dashboard page throws a 404 or 403).
+
 ### Shell Components
 
 Reusable layout wrappers used by route group layouts:
@@ -847,7 +862,8 @@ Reusable layout wrappers used by route group layouts:
 ✅ DO: Create loading.tsx in every route group for lazy loading
 ✅ DO: Keep pages thin — delegate to feature components
 ✅ DO: Use shell components for shared layout (sidebar, header, footer)
-✅ DO: Create error.tsx per route group for granular error handling
+✅ DO: Create error.tsx per route group for granular error handling.
+✅ DO: Use not-found.tsx, forbidden.tsx, and unauthorized.tsx for intentional access control logic along with next/navigation functions.
 
 ❌ DON'T: Hardcode route strings in components — use ROUTES constants
 ❌ DON'T: Put business logic in layout or loading files

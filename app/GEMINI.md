@@ -26,7 +26,10 @@ app/
 ├── layout.tsx            # Root layout (Server Component)
 ├── page.tsx              # Home page (template overview)
 ├── error.tsx             # Global error boundary (Client Component)
+├── global-error.tsx      # Root layout error boundary (Client Component)
 ├── not-found.tsx         # Custom 404 page
+├── forbidden.tsx         # 403 Forbidden page
+├── unauthorized.tsx      # 401 Unauthorized page
 ├── loading.tsx           # Root loading fallback (spinner)
 ├── providers.tsx         # Client providers wrapper
 ├── (auth)/               # Route group — auth pages
@@ -66,15 +69,20 @@ Extract all business logic, data fetching, and complex state into `src/features/
 | Root layout | `app/layout.tsx` |
 | Home page | `app/page.tsx` |
 | Error boundary | `app/error.tsx` |
+| Root layout error | `app/global-error.tsx` |
 | 404 page | `app/not-found.tsx` |
+| 403 Forbidden | `app/forbidden.tsx` |
+| 401 Unauthorized | `app/unauthorized.tsx` |
 | Root loading | `app/loading.tsx` |
 | Client providers | `app/providers.tsx` |
 
 ---
 
-## Next.js Gotchas
+## vinext / Next.js Gotchas
 
+- **Routing Link Shim**: We use `vinext` instead of pure Next.js for Cloudflare edge deployment support. Due to TS type resolution with Vite, you **MUST** import the Next link component via `import Link from 'vinext/shims/link'` instead of `next/link`.
 - **Proxy vs Middleware**: We use `proxy.ts`, NOT `middleware.ts`. The exported function is `proxy()`.
+- **vinext CLI**: For compatibility checking, use `npx vinext check`. Standard commands are `vinext dev`, `vinext build`, `vinext start`, and `vinext deploy` (Cloudflare).
 - **RSC Default**: Components are Server Components by default. Only add `"use client"` when you need hooks (`useGSAP`, `useState`) or browser APIs.
 - **Client boundaries deep in tree**: When adding animations (which require "use client"), extract the animated code into a leaf component rather than making the whole page "use client".
 

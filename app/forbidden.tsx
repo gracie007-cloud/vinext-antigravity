@@ -1,26 +1,26 @@
 import Link from 'vinext/shims/link';
-import { FileQuestion, Home } from 'lucide-react';
+import { ShieldAlert, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 /*
- * File Name:     not-found.tsx
- * Description:   Global 404 error page. Renders when a route is not found or notFound() is called.
+ * File Name:     forbidden.tsx
+ * Description:   Global 403 Forbidden page. Renders when forbidden() is called indicating lack of permissions.
  * Author:        Antigravity
  * Created Date:  2026-02-26
  */
 
-export default function NotFound() {
+export default function Forbidden() {
     return (
         <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background p-4 text-center">
             <div className="flex max-w-md flex-col items-center space-y-6">
-                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-muted text-muted-foreground">
-                    <FileQuestion className="h-12 w-12" />
+                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+                    <ShieldAlert className="h-12 w-12" />
                 </div>
 
                 <div className="space-y-2">
-                    <h1 className="text-4xl font-semibold tracking-tight text-foreground">404 - Page Not Found</h1>
+                    <h1 className="text-4xl font-semibold tracking-tight text-foreground">403 - Forbidden</h1>
                     <p className="text-muted-foreground">
-                        We couldn't find the page you were looking for. It might have been moved or deleted.
+                        You don't have permission to access this resource. Please contact your administrator if you believe this is a mistake.
                     </p>
                 </div>
 
