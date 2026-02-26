@@ -32,6 +32,7 @@
 - Imports → `rules.md § 7`
 - Git & commits → `rules.md § 9`
 - Forms (react-hook-form + zod) → `rules.md § 13`
+- API Architecture (apiClient, endpoints, services) → `rules.md § 14`
 
 ---
 
@@ -201,6 +202,9 @@ rg "useEffect" src/features --type ts | rg -v ".test."
 
 # Find hardcoded animation values (violation — use tokens)
 rg "duration: [0-9]" src/features
+
+# Find hardcoded API URLs (violation — use constants/endpoints.ts)
+rg "fetch\(" features/ lib/ --type ts | rg -v "apiClient"
 ```
 
 ---

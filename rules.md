@@ -26,6 +26,7 @@
 11. [Testing](#11-testing)
 12. [Animations](#12-animations)
 13. [Forms](#13-forms)
+14. [API Architecture](#14-api-architecture)
 
 ---
 
@@ -670,6 +671,116 @@ pnpm dlx shadcn-ui@latest add calendar popover  # For date pickers
 
 ---
 
+## 14. API Architecture
+
+> **All HTTP calls flow through a single base service (`lib/apiClient.ts`).**
+> This ensures consistent headers, auth token injection, error handling,
+> and typed responses across the entire application.
+
+### 6-Layer Flow
+
+```
+.env (NEXT_PUBLIC_API_BASE_URL)
+  → constants/endpoints.ts (all route paths as constants)
+    → types/api.types.ts (shared response/error shapes)
+      → lib/apiClient.ts (base fetch wrapper — single entry point)
+        → features/<name>/services/<name>Service.ts (feature API calls)
+          → features/<name>/components/... (UI consumes the service)
+```
+
+### File Placement
+
+| File | Location | Scope |
+|------|----------|-------|
+| API base URL | `.env.local` | Server + client |
+| Endpoint paths | `constants/endpoints.ts` | Global |
+| Response / error types | `types/api.types.ts` | Global |
+| Base HTTP client | `lib/apiClient.ts` | Global |
+| Feature service | `features/<name>/services/<name>Service.ts` | Feature |
+| Feature types | `features/<name>/types/<name>.types.ts` | Feature |
+
+### Base Service (`lib/apiClient.ts`)
+
+- Uses **native `fetch`** — works in RSC, client components, and edge.
+- Typed methods: `get<T>`, `post<T>`, `put<T>`, `patch<T>`, `del<T>`.
+- Auth token injected via `setAuthTokenGetter()` — decoupled from auth state.
+- Throws typed `ApiError` on non-2xx responses.
+- Supports Next.js `cache` and `next.revalidate` options via `RequestConfig`.
+
+### Endpoint Constants (`constants/endpoints.ts`)
+
+- **Every API path** lives here — never hardcode URLs in services or components.
+- Static paths → string constants. Dynamic paths → functions returning strings.
+- Group by domain: `AUTH`, `USERS`, `PRODUCTS`, etc.
+
+```ts
+// ✅ Good — import from endpoints
+import { API_ENDPOINTS } from '@/constants/endpoints';
+apiClient.get(API_ENDPOINTS.USERS.PROFILE);
+
+// ❌ Bad — hardcoded URL
+apiClient.get('/api/users/profile');
+```
+
+### Service Pattern
+
+Services are thin functions that combine `apiClient` + `API_ENDPOINTS`:
+
+```ts
+// features/auth/services/authService.ts
+import { apiClient } from '@/lib/apiClient';
+import { API_ENDPOINTS } from '@/constants/endpoints';
+import type { ApiResponse } from '@/types/api.types';
+import type { LoginRequest, AuthResponse } from '../types/auth.types';
+
+export async function login(
+  data: LoginRequest,
+): Promise<ApiResponse<AuthResponse>> {
+  return apiClient.post<AuthResponse>(API_ENDPOINTS.AUTH.LOGIN, data);
+}
+```
+
+### Calling Services in Components
+
+```tsx
+'use client';
+
+import { login } from '@/features/auth';
+import type { ApiError } from '@/types/api.types';
+
+function LoginForm() {
+  async function handleSubmit(data: LoginFormValues) {
+    try {
+      const response = await login(data);
+      // response.data.user, response.data.tokens
+    } catch (error) {
+      const apiError = error as ApiError;
+      // apiError.message, apiError.statusCode, apiError.errors
+    }
+  }
+}
+```
+
+### API Architecture Rules
+
+```
+✅ DO: Route ALL HTTP calls through apiClient — never use raw fetch in features
+✅ DO: Define every endpoint path in constants/endpoints.ts
+✅ DO: Use typed ApiResponse<T> and ApiError for all returns/catches
+✅ DO: Keep services as thin functions — one function per API call
+✅ DO: Export services through the feature barrel (index.ts)
+✅ DO: Define feature-specific types in features/<name>/types/
+
+❌ DON'T: Hardcode API URLs in services or components
+❌ DON'T: Call apiClient directly from components — go through a service
+❌ DON'T: Import from feature internals — use barrel exports only
+❌ DON'T: Put business logic in services — services only do HTTP calls
+❌ DON'T: Use axios or other HTTP libraries — apiClient wraps native fetch
+❌ DON'T: Skip error typing — always catch ApiError
+```
+
+---
+
 ## Quick Reference
 
 ```
@@ -687,6 +798,7 @@ IMPORTS      → @/ alias, 4-group order, no circular deps, barrel-only cross-fe
 STYLING      → Tailwind utilities only, CSS vars, 8pt grid, 60/30/10 color
 COMPONENTS   → shadcn/ui first, CVA variants, Radix for behavior
 FORMS        → react-hook-form + zodResolver + shadcn Form components
+API          → apiClient only, endpoints.ts for paths, services per feature, barrel exports
 COMMITS      → type(scope): description
 FILE HEADER  → Every new file, ISO date, specific description
 DESIGN       → See design-system.md for full UI rules
