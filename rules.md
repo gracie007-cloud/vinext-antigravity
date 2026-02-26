@@ -98,7 +98,7 @@ src/
 │   ├── mocks/
 │   ├── fixtures/
 │   └── renderWithProviders.tsx
-└── middleware.ts               # Next.js middleware
+└── proxy.ts                    # Next.js proxy (replaces middleware)
 ```
 
 > **Plain React (Vite/CRA)**: Replace `src/app/` with `src/pages/` or

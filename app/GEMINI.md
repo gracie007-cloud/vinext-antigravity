@@ -31,6 +31,21 @@ pnpm start
 # Lint
 pnpm lint
 
+# Run tests
+pnpm test
+
+# Run tests (watch mode)
+pnpm test:watch
+
+# Run tests (coverage)
+pnpm test:coverage
+
+# Format code
+pnpm format
+
+# Check formatting
+pnpm format:check
+
 # Verify GSAP is installed
 Select-String -Path "package.json" -Pattern "gsap"
 
@@ -52,7 +67,10 @@ app/
 ├── favicon.ico           # Site favicon
 ├── globals.css           # Tailwind v4 + OKLCH color variables
 ├── layout.tsx            # Root layout (Server Component)
-├── page.tsx              # Home page (thin orchestrator)
+├── page.tsx              # Home page (template overview)
+├── error.tsx             # Global error boundary (Client Component)
+├── not-found.tsx         # Custom 404 page
+├── providers.tsx         # Client providers wrapper
 ├── (auth)/               # Route group — auth pages
 │   ├── login/page.tsx
 │   └── register/page.tsx
@@ -121,10 +139,19 @@ app/
 | Global styles | `app/globals.css` |
 | Root layout | `app/layout.tsx` |
 | Home page | `app/page.tsx` |
+| Error boundary | `app/error.tsx` |
+| 404 page | `app/not-found.tsx` |
+| Client providers | `app/providers.tsx` |
 | GSAP config | `lib/gsapConfig.ts` |
 | Animation tokens | `constants/animationTokens.ts` |
 | shadcn config | `components.json` |
 | UI primitives | `components/ui/` |
+| Shared types | `types/` |
+| Shared schemas | `schemas/` |
+| Test setup | `test/setup.ts` |
+| Vitest config | `vitest.config.ts` |
+| Prettier config | `.prettierrc` |
+| Env template | `.env.example` |
 
 ---
 
@@ -191,7 +218,12 @@ Select-String -Path "*.tsx" -Pattern "bg-(red|blue|green|yellow|purple|pink|oran
 
 **Code**:
 ```bash
-pnpm lint; if($?) { npx tsc --noEmit }; if($?) { pnpm build }
+pnpm lint; if($?) { npx tsc --noEmit }; if($?) { pnpm test }; if($?) { pnpm build }
+```
+
+**Formatting**:
+```bash
+pnpm format:check
 ```
 
 **UI** (manual): Run through the checklist in [`design-system.md § 10`](../design-system.md#10-ui-code-review-checklist)
@@ -227,4 +259,4 @@ rule in [`animations.md`](../animations.md).
 
 ---
 
-*Last updated: 2026-02-25*
+*Last updated: 2026-02-26*

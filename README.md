@@ -14,6 +14,8 @@ A production-ready frontend template powered by **vinext** — a Vite-based reim
 | [GSAP](https://greensock.com/gsap/) | 3.x | Professional animations |
 | [React Hook Form](https://react-hook-form.com/) | 7.x | Form state management |
 | [Zod](https://zod.dev/) | 4.x | Schema validation |
+| [Vitest](https://vitest.dev/) | 3.x | Unit & integration testing |
+| [Prettier](https://prettier.io/) | 3.x | Code formatting |
 | [Cloudflare Workers](https://workers.cloudflare.com/) | Latest | Edge runtime deployment |
 | [pnpm](https://pnpm.io/) | Latest | Fast, disk-efficient package manager |
 
@@ -63,6 +65,15 @@ pnpm build
 
 # Preview production build locally
 pnpm preview
+
+# Run tests
+pnpm test
+
+# Run tests (watch mode)
+pnpm test:watch
+
+# Run tests (coverage report)
+pnpm test:coverage
 ```
 
 ### Linting
@@ -80,9 +91,12 @@ pnpm lint --fix
 ```
 ├── app/                    # App Router (file-based routing)
 │   ├── layout.tsx          # Root layout
-│   ├── page.tsx            # Home page
+│   ├── page.tsx            # Home page (template overview)
+│   ├── error.tsx           # Global error boundary
+│   ├── not-found.tsx       # Custom 404 page
+│   ├── providers.tsx       # Client providers wrapper
 │   ├── globals.css         # Global styles + Tailwind v4 theme
-│   └── GEMINI.md           # App-specific AI agent guidance
+│   └── gemini.md           # App-specific AI agent guidance
 │
 ├── components/             # Shared UI components
 │   └── ui/                 # shadcn/ui components
@@ -103,8 +117,19 @@ pnpm lint --fix
 ├── constants/              # App constants
 │   └── animationTokens.ts  # Duration, ease, stagger values
 │
+├── types/                  # Shared TypeScript types
+├── schemas/                # Shared Zod validation schemas
+│
+├── test/                   # Test infrastructure
+│   ├── setup.ts            # Global test setup
+│   ├── mocks/              # Test mocks
+│   └── fixtures/           # Test fixtures
+│
 ├── public/                 # Static assets
 │
+├── vitest.config.ts        # Vitest test runner config
+├── .prettierrc             # Code formatting config
+├── .env.example            # Environment variable template
 ├── rules.md                # Code conventions (MUST READ)
 ├── design-system.md        # UI/design rules (MUST READ)
 ├── animations-guide.md     # GSAP animation rules (MUST READ)
@@ -210,6 +235,11 @@ refactor(products): extract validation to shared schema
 | `pnpm preview` | Preview production build locally |
 | `pnpm lint` | Run ESLint |
 | `pnpm lint --fix` | Fix lint errors |
+| `pnpm test` | Run tests once |
+| `pnpm test:watch` | Run tests in watch mode |
+| `pnpm test:coverage` | Run tests with coverage report |
+| `pnpm format` | Format all files with Prettier |
+| `pnpm format:check` | Check formatting without changes |
 
 ## Deployment
 
