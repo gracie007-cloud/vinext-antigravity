@@ -1,6 +1,6 @@
 # vinext
 
-A production-ready frontend template powered by **vinext** — a Vite-based reimplementation of Next.js routing that runs on Cloudflare Workers. Built for scalability, edge performance, and developer productivity.
+**vinext** is the Next.js API surface, reimplemented on Vite by **Cloudflare**. This template provides a production-ready starting point optimized for 4.4x faster builds, 57% smaller bundles, and instant deployment to Cloudflare Workers.
 
 ## Tech Stack
 
@@ -21,8 +21,10 @@ A production-ready frontend template powered by **vinext** — a Vite-based reim
 
 ## Features
 
-- **Edge-First Architecture**: Runs on Cloudflare Workers for ultra-low latency globally
-- **File-Based Routing**: Familiar page-based routing powered by Vite — no framework lock-in
+- **Next.js Alternative**: A full App Router reimplementation built by Cloudflare for the modern web.
+- **Blazing Performance**: Up to 4.4x faster builds and 57% smaller client bundles vs standard Next.js.
+- **Edge-First Architecture**: Runs natively on Cloudflare Workers for ultra-low latency globally.
+- **File-Based Routing**: Familiar Next.js-style routing powered by Vite — no framework lock-in.
 - **Design System**: Enforced typography (4 sizes, 2 weights), 8pt grid spacing, and 60/30/10 color rule
 - **Animation Infrastructure**: GSAP with `useGSAP` hook pattern, responsive animations via `matchMedia()`, and motion tokens
 - **Component Library**: Pre-configured shadcn/ui with Radix UI primitives for accessibility
@@ -265,4 +267,4 @@ MIT License — feel free to use for personal and commercial projects.
 
 ---
 
-*Last updated: 2026-02-26*
+*Last updated: 2026-02-27*
